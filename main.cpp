@@ -23,14 +23,24 @@ long long    tempCarry;
 
 vector<unsigned int> countLine;
 
-int main()
+bool loopState = true;
+
+int main(int argc, char* argv[])
 {
-    while (true)
+    while (loopState)
     {
-        cout << "Input an exponential expression (positive numbers only) : ";
-        cin >> buffer;
-        if (!buffer.compare("exit"))
-            break;
+        if (argc == 1)
+        {
+            cout << "Input an exponential expression (positive numbers only) : ";
+            cin >> buffer;
+            if (!buffer.compare("exit"))
+                break;
+        }
+        else if (argc == 2)
+        {
+            loopState = false;
+            buffer = string(argv[1]);
+        }
         parsingVals = parsingExpression(buffer);
 
         result3 = parsingVals[parsingVals.size() - 1];

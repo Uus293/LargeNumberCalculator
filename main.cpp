@@ -1,9 +1,9 @@
-#include    <iostream>
-#include    <cstdlib>
-#include    <vector>
-#include    <string>
-#define     UINT_LIMIT  100000000
-#define     UINT_LIMIT_DIGITS   8
+#include <iostream>
+#include <cstdlib>
+#include <vector>
+#include <string>
+#define UINT_LIMIT 100000000
+#define UINT_LIMIT_DIGITS 8
 
 using namespace std;
 
@@ -18,15 +18,16 @@ vector<unsigned int> result2;
 vector<unsigned int> result3;
 vector<unsigned int> factor;
 
-long long    tempAdd;
-long long    tempCarry;
+long long tempSum;
+long long tempCarry;
 
 vector<unsigned int> countLine;
 
 bool loopState = true;
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
+    
     while (loopState)
     {
         if (argc == 1)
@@ -36,10 +37,10 @@ int main(int argc, char* argv[])
             if (!buffer.compare("exit"))
                 break;
         }
-        else if (argc == 2)
+        else if(argc == 2)
         {
-            loopState = false;
             buffer = string(argv[1]);
+            loopState = false;
         }
         parsingVals = parsingExpression(buffer);
 
@@ -60,23 +61,23 @@ int main(int argc, char* argv[])
                     int k;
                     for (k = 0; k < result1.size(); k++)
                     {
-                        tempAdd = (long long)factor[j] * (long long)result1[k] + tempCarry;
-                        tempCarry = tempAdd / UINT_LIMIT;
-                        tempAdd %= UINT_LIMIT;
+                        tempSum = (long long)factor[j] * (long long)result1[k] + tempCarry;
+                        tempCarry = tempSum / UINT_LIMIT;
+                        tempSum %= UINT_LIMIT;
                         if (result2.size() - 1 < j + k)
                             result2.push_back(0);
-                        if (j + k == result2.size()  - 1 && tempCarry > 0)
+                        if (j + k == result2.size() - 1 && tempCarry > 0)
                             result2.push_back(0);
-                        tempCarry += (result2[j + k] + tempAdd) / UINT_LIMIT;
-                        result2[j + k] = (result2[j + k] + tempAdd) % UINT_LIMIT;
+                        tempCarry += (result2[j + k] + tempSum) / UINT_LIMIT;
+                        result2[j + k] = (result2[j + k] + tempSum) % UINT_LIMIT;
                     }
                     if (tempCarry > 0)
                         result2[j + k] += tempCarry;
                 }
-                result1 = result2;
+                copy(result2.begin(), result2.end(), result1.begin());
             }
-            result3 = result1;  
-        }   // The part that calculates the values 
+            copy(result1.begin(), result1.end(), result3.begin());
+        } // The part that calculates the values
         for (int i = result3.size() - 1; i >= 0; i--)
         {
             if (i == result3.size() - 1)
@@ -95,11 +96,10 @@ int main(int argc, char* argv[])
                 if (digitNum != 0)
                     cout << result3[i];
             }
-
         }
         cout << endl;
     }
-    
+
     //  [223][242][353][220][353]
     //  [432][595][242][943][230]
     return 0;
@@ -113,31 +113,31 @@ vector<vector<unsigned int>> parsingExpression(string str)
     unsigned int tempVal;
 
     indices.push_back(-1);
-    for(int i = 0; i < str.size() + 1; i++)
+    for (int i = 0; i < str.size() + 1; i++)
     {
-        if(str[i] == '^' || str[i] == '\0')
+        if (str[i] == '^' || str[i] == '\0')
             indices.push_back(i);
     }
-    for(int i = 0; i < indices.size() - 1; i++)
+    for (int i = 0; i < indices.size() - 1; i++)
     {
         tempValLine.clear();
         tempValLine.push_back(0);
-        for(int j = indices[i] + 1; j < indices[i + 1]; j++)
+        for (int j = indices[i] + 1; j < indices[i + 1]; j++)
         {
             tempVal = 0;
-            if(str[j] >= '0' && str[j] <= '9')
+            if (str[j] >= '0' && str[j] <= '9')
             {
                 for (int k = 0; k < tempValLine.size(); k++)
                 {
                     tempValLine[k] *= 10;
-                    if(k == 0)
+                    if (k == 0)
                         tempValLine[k] += str[j] - '0';
                     tempValLine[k] += tempVal;
                     if (tempValLine[k] >= UINT_LIMIT)
                     {
                         tempVal = tempValLine[k] / UINT_LIMIT;
                         tempValLine[k] %= UINT_LIMIT;
-                        if(k == tempValLine.size() - 1)
+                        if (k == tempValLine.size() - 1)
                         {
                             tempValLine.push_back(tempVal);
                             break;
@@ -159,23 +159,23 @@ bool counter(vector<unsigned int> valLine)
     unsigned int i = 0;
     unsigned int matchCount = 0;
 
-    if(countLine.size() == 0)
+    if (countLine.size() == 0)
         countLine.push_back(0);
-    while(true)
+    while (true)
     {
-        if(countLine[i] == valLine[i])
+        if (countLine[i] == valLine[i])
         {
             matchCount++;
-            if(matchCount == valLine.size())
+            if (matchCount == valLine.size())
             {
                 continueState = false;
                 break;
             }
         }
-        if(countLine[i] == UINT_LIMIT - 1)
+        if (countLine[i] == UINT_LIMIT - 1)
         {
             countLine[i] = 0;
-            if(countLine.size() < i + 2)
+            if (countLine.size() < i + 2)
                 countLine.push_back(0);
             countLine[++i]++;
         }
